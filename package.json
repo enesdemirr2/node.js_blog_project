@@ -1,0 +1,33 @@
+{
+  "name": "blog_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enesdemirr2/node.js.blog.app.git"
+  },
+  "author": "Enes DEMIR",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/enesdemirr2/node.js.blog.app/issues"
+  },
+  "homepage": "https://github.com/enesdemirr2/node.js.blog.app#readme",
+  "dependencies": {
+    "connect-flash": "^0.1.1",
+    "dotenv": "^16.0.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.3",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.17.2",
+    "mysql2": "^2.3.3",
+    "nodemon": "^2.0.15",
+    "passport": "^0.5.2",
+    "passport-local": "^1.0.0",
+    "sequelize": "^6.17.0",
+    "sequelize-cli": "^6.4.1"
+  }
+}
