@@ -5,6 +5,12 @@ const app = express();
 //db bağlantısı 
 require('./database.js')
 
+//routerlar include edilir.
+const authRouter = require('./src/routers/auth_router');
+
+//formdan gelen değerlerin okunabilmesi için
+app.use(express.urlencoded({extended: true}))
+
 //template engine ayarları
 const ejs = require('ejs');
 const expressLayouts = require('express-ejs-layouts');
@@ -19,17 +25,8 @@ app.get('/', (req, res) => {
     res.json({mesaj: 'merhaba'});
 })
 
-app.get('/login', (req,res) => {
-    res.render('login', { layout: './layout/auth_layout.ejs'})
-})
+app.use('/', authRouter);
 
-app.get('/register', (req,res) => {
-    res.render('register', { layout: './layout/auth_layout.ejs'})
-})
-
-app.get('/forget-password', (req,res) => {
-    res.render('forget_password', { layout: './layout/auth_layout.ejs'})
-})
 
 app.listen(process.env.PORT, () => {
     console.log(`Server ${process.env.PORT} portundan ayaklandı`);
