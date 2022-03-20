@@ -12,13 +12,13 @@ const validateNewUser = () => {
             .isLength({ min: 6 }).withMessage('Şifre en az 6 karakter olmalı')
             .isLength({ max: 20 }).withMessage('Şifre en fazla 20 karakter olmalı'),
 
-        body('isim').trim()
+        body('ad').trim()
             .isLength({ min: 2 }).withMessage('Isim en az 2 karakter olmalı')
             .isLength({ max: 30 }).withMessage('Isim en fazla 30 karakter olmalı'),
 
-        body('soyisim').trim()
-            .isLength({ min: 2 }).withMessage('Soyisim en az 6 karakter olmalı')
-            .isLength({ max: 30 }).withMessage('Soyisim en fazla 20 karakter olmalı'),
+        body('soyad').trim()
+            .isLength({ min: 2 }).withMessage('Soyisim en az 2 karakter olmalı')
+            .isLength({ max: 30 }).withMessage('Soyisim en fazla 30 karakter olmalı'),
 
         body('resifre').trim().custom((value, { req }) => {
             if (value !== req.body.sifre) {

@@ -12,6 +12,7 @@ const login = (req, res, next) => {
 }
 
 const registerFormunuGoster = (req, res, next) => {
+    //console.log(req.flash('validation_error'));
     res.render('register', { layout: './layout/auth_layout.ejs'})
 
 }
@@ -21,7 +22,16 @@ const register = (req, res, next) => {
     const hatalar = validationResult(req);
     //console.log(hatalarDizisi);
     if (!hatalar.isEmpty()) {
-        res.render('register', { layout: './layout/auth_layout.ejs', hatalar: hatalar.array()});
+
+        req.flash('validation_error', hatalar.array());
+        req.flash('email', req.body.email);
+        req.flash('ad', req.body.ad);
+        req.flash('soyad', req.body.soyad);
+        req.flash('sifre', req.body.sifre);
+        req.flash('resifre', req.body.resifre);
+
+        res.redirect('/register');
+        // res.render('register', { layout: './layout/auth_layout.ejs', hatalar: hatalar.array()});
     }
 }
 
