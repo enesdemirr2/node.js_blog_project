@@ -1,4 +1,6 @@
 const {validationResult} = require('express-validator');
+const User = require('../models/user')
+
 
 const loginFormunuGoster = (req, res, next) => {
     res.render('login', { layout: './layout/auth_layout.ejs'})
@@ -17,7 +19,7 @@ const registerFormunuGoster = (req, res, next) => {
 
 }
 
-const register = (req, res, next) => {
+const register = async(req, res, next) => {
 
     const hatalar = validationResult(req);
     //console.log(hatalarDizisi);
@@ -25,13 +27,49 @@ const register = (req, res, next) => {
 
         req.flash('validation_error', hatalar.array());
         req.flash('email', req.body.email);
-        req.flash('ad', req.body.ad);
-        req.flash('soyad', req.body.soyad);
-        req.flash('sifre', req.body.sifre);
-        req.flash('resifre', req.body.resifre);
+        req.flash('full_name', req.body.full_name);
+        req.flash('user_name', req.body.user_name);
+        req.flash('password', req.body.password);
+        req.flash('repassword', req.body.repassword);
 
         res.redirect('/register');
         // res.render('register', { layout: './layout/auth_layout.ejs', hatalar: hatalar.array()});
+    } else {
+
+        try {
+            const _user = await User.findOne({
+                where : {
+                    email : req.body.email}
+                });
+
+            if(_user) {
+                req.flash('validation_error',[{msg: "Bu mail kullanılıyor"}])
+                req.flash('email', req.body.email);
+                req.flash('full_name', req.body.full_name);
+                req.flash('user_name', req.body.user_name);
+                req.flash('password', req.body.password);
+                req.flash('repassword', req.body.repassword);
+
+                res.redirect('/register');
+            } else {
+                const newUser = new User ({
+                    email:req.body.email,
+                    full_name:req.body.full_name,
+                    user_name:req.body.user_name,
+                    password:req.body.password,
+                });
+                //Yeni kullanıcının veri tabanına kayıt olması 
+                await newUser.save();
+                console.log("Kullanıcı Kaydedildi");
+                
+                res.redirect('/login');
+                req.flash('success_message', [{msg: "Giriş yapabilirsiniz"}])
+            }
+
+        } catch(err) {
+
+        }
+
     }
 }
 

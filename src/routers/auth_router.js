@@ -7,7 +7,7 @@ router.post('/login', authController.login);
 
 
 router.get('/register', authController.registerFormunuGoster);
-router.post('/register', validatorMiddleware.validateNewUser(), authController.register);
+router.post('/register-post', validatorMiddleware.validateNewUser(), authController.register);
 
 router.get('/forget-password', authController.forgetPasswordFormunuGoster);
 router.post('/forget-password', authController.forgetPassword);
