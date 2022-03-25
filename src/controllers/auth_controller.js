@@ -1,5 +1,7 @@
 const {validationResult} = require('express-validator');
 const User = require('../models/user')
+const passport = require('passport');
+require('../../config/passport_local')(passport);
 
 
 const loginFormunuGoster = (req, res, next) => {
@@ -9,7 +11,12 @@ const loginFormunuGoster = (req, res, next) => {
 
 const login = (req, res, next) => {
     console.log(req.body);
-    res.render('login', { layout: './layout/auth_layout.ejs'})
+    passport.authenticate('local', {
+        successRedirect: '/',
+        failureRedirect: '/login',
+        failureFlash: true
+    })(req, res, next);
+    //res.render('login', { layout: './layout/auth_layout.ejs'})
 
 }
 

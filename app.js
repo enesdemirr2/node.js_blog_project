@@ -1,8 +1,13 @@
 const dotenv = require('dotenv').config();
 const express = require('express');
 const app = express();
+//session işlemleri için gereken paket
 const session = require('express-session');
+//render edilen sayfalarda mesaj göstermek için kullanılan
+//ve de çalışmak için seesion paketi isteyen yardımcı paket
 const flash = require('connect-flash')
+
+const passport = require('passport');
 
 //db bağlantısı 
 const database = require('./config/database')
@@ -39,8 +44,14 @@ app.use((req, res, next) => {
     res.locals.password = req.flash('password')
     res.locals.repassword = req.flash('repassword')
 
+
     next();
 });
+
+//passport-local için atama yaparız
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 //routerlar include edilir.
 const authRouter = require('./src/routers/auth_router');
