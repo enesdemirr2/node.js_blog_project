@@ -9,6 +9,17 @@ const flash = require('connect-flash')
 
 const passport = require('passport');
 
+//Sesiondan öncesine taşıdık.Artık bu static dosyalara get isteğinde bulunulduğunda seesion yapısı çalışmayacak
+//template engine ayarları
+const ejs = require('ejs');
+const expressLayouts = require('express-ejs-layouts');
+const path = require('path');
+
+app.use(express.static('public')); //erişmek için önce açtık
+app.use(expressLayouts);
+app.set('view engine', 'ejs');
+app.set('views', path.resolve(__dirname, './src/views'));
+
 //db bağlantısı 
 const database = require('./config/database')
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
@@ -44,6 +55,7 @@ app.use((req, res, next) => {
     res.locals.password = req.flash('password')
     res.locals.repassword = req.flash('repassword')
 
+    res.locals.login_error = req.flash('error');
 
     next();
 });
@@ -55,19 +67,10 @@ app.use(passport.session());
 
 //routerlar include edilir.
 const authRouter = require('./src/routers/auth_router');
+const yonetimRouter = require('./src/routers/yonetim_router');
 
 //formdan gelen değerlerin okunabilmesi için
 app.use(express.urlencoded({extended: true}))
-
-//template engine ayarları
-const ejs = require('ejs');
-const expressLayouts = require('express-ejs-layouts');
-const path = require('path');
-
-app.use(express.static('public')); //erişmek için önce açtık
-app.use(expressLayouts);
-app.set('view engine', 'ejs');
-app.set('views', path.resolve(__dirname, './src/views'));
 
 let sayac = 0;
 
@@ -77,12 +80,13 @@ app.get('/', (req, res) => {
     } else {
         req.session.sayac = 1;
     }
-    res.json({mesaj: 'merhaba', sayacim: req.session.sayac});
+    res.json({mesaj: 'merhaba', sayacim: req.session.sayac, kulanici: req.user});
 })
 
 app.use('/', authRouter);
+app.use('/yonetim', yonetimRouter);
 
-
+ 
 app.listen(process.env.PORT, () => {
     console.log(`Server ${process.env.PORT} portundan ayaklandı`);
 })

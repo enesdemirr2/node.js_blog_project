@@ -19,11 +19,11 @@ module.exports = function(passport) {
             })
 
             if (!_bulunanUser) {
-                return done(null, false, { message: 'User bulunamadı'});
+                return done(null, false, { message: 'User bulunamadi'});
             }
 
             if (_bulunanUser.password !== password) {
-                return done(null, false, {message: 'Şifre hatalı'});
+                return done(null, false, {message: 'Sifre hatali'});
             } else {
                 return done(null, _bulunanUser);
             }
@@ -39,13 +39,13 @@ module.exports = function(passport) {
     });
 
     passport.deserializeUser(async function(id, done) {
-        console.log("Sessiona kaydedilen id veritabanında arandı ve bulundu");
+        //console.log("Sessiona kaydedilen id veritabanında arandı ve bulundu");
         const user = await User.findOne({
             where: {
                 id: id
             }
         });
-        console.log(user);
+        //console.log(user);
         done(null, user);
     });
 }

@@ -10,12 +10,28 @@ const loginFormunuGoster = (req, res, next) => {
 }
 
 const login = (req, res, next) => {
-    console.log(req.body);
-    passport.authenticate('local', {
-        successRedirect: '/',
-        failureRedirect: '/login',
-        failureFlash: true
-    })(req, res, next);
+    
+    //Logine post isteği geldiğinde
+    const hatalar = validationResult(req);
+    //console.log(hatalarDizisi);
+    req.flash('email', req.body.email);
+    req.flash('password', req.body.password);
+
+    if (!hatalar.isEmpty()) {
+
+        req.flash('validation_error', hatalar.array());
+        
+
+        res.redirect('/login');
+        // res.render('register', { layout: './layout/auth_layout.ejs', hatalar: hatalar.array()});
+    } 
+    else {
+        passport.authenticate('local', {
+            successRedirect: '/yonetim', //Başarılı giriş olursa buraya yönlendir
+            failureRedirect: '/login',
+            failureFlash: true
+        })(req, res, next);
+    }
     //res.render('login', { layout: './layout/auth_layout.ejs'})
 
 }
@@ -91,11 +107,23 @@ const forgetPassword = (req, res, next) => {
 
 }
 
+const logout = (req, res, next) => {
+    req.logout();// Sessionda bulunan id değerini siler
+    req.session.destroy((error) => { // Çıkış yaptıktan sonra sessionu  siler
+        res.clearCookie('connect.sid'); //Git bunu temizle
+        //req.flash('success_message', [{msg: 'Basariyla çikis yapildi'}]) //Sesion silindiği için bu yapıyı kullanamadık
+        res.render('login', { layout: './layout/auth_layout.ejs', success_message:[{msg: 'Basariyla çikis yapildi'}] })
+        //res.redirect('/login');
+        //res.send('Çıkış Yapıldı');
+    });
+
+}
+
 module.exports = {
     loginFormunuGoster,
     registerFormunuGoster,
     forgetPasswordFormunuGoster,
     register,
     login,
-    forgetPassword
+    forgetPassword, logout
 };

@@ -9,8 +9,8 @@ const validateNewUser = () => {
             .isEmail().withMessage('Geçerli bir mail giriniz'),
 
         body('password').trim()
-            .isLength({ min: 6 }).withMessage('Şifre en az 6 karakter olmalı')
-            .isLength({ max: 20 }).withMessage('Şifre en fazla 20 karakter olmalı'),
+            .isLength({ min: 6 }).withMessage('Sifre en az 6 karakter olmali')
+            .isLength({ max: 20 }).withMessage('Sifre en fazla 20 karakter olmali'),
 
         body('full_name').trim()
             .isLength({ min: 2 }).withMessage('Isim bilgisi en az 2 karakter olmalı')
@@ -30,6 +30,19 @@ const validateNewUser = () => {
     ];
 }
 
+const validateLogin = () => {
+    return[
+        body('email')
+            .trim()
+            .isEmail().withMessage('Geçerli bir mail giriniz'),
+
+        body('password').trim()
+            .isLength({ min: 6 }).withMessage('Sifre en az 6 karakter olmali')
+            .isLength({ max: 20 }).withMessage('Sifre en fazla 20 karakter olmali'),
+    ];
+}
+
 module.exports = {
-    validateNewUser
+    validateNewUser,
+    validateLogin
 }
