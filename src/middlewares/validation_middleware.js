@@ -30,6 +30,23 @@ const validateNewUser = () => {
     ];
 }
 
+const validateNewPassword = () => {
+    return[
+        
+        body('password').trim()
+            .isLength({ min: 6 }).withMessage('Sifre en az 6 karakter olmali')
+            .isLength({ max: 20 }).withMessage('Sifre en fazla 20 karakter olmali'),
+
+        body('repassword').trim().custom((value, { req }) => {
+            if (value !== req.body.password) {
+                throw new Error('Sifreler ayni degil');
+            }
+            return true;
+        })
+
+    ];
+}
+
 const validateLogin = () => {
     return[
         body('email')
@@ -42,7 +59,19 @@ const validateLogin = () => {
     ];
 }
 
+//Sifremi unuttum kısmı için email validasyonu yaptık
+const validateEmail = () => {
+    return[
+        body('email')
+            .trim()
+            .isEmail().withMessage('Geçerli bir mail giriniz'),
+
+    ];
+}
+
 module.exports = {
     validateNewUser,
-    validateLogin
+    validateLogin,
+    validateEmail,
+    validateNewPassword
 }
