@@ -2,6 +2,9 @@ const {validationResult} = require('express-validator');
 const User = require('../models/user')
 const passport = require('passport');
 require('../../config/passport_local')(passport);
+const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
 
 
 const loginFormunuGoster = (req, res, next) => {
@@ -65,7 +68,7 @@ const register = async(req, res, next) => {
                     email : req.body.email}
                 });
 
-            if(_user) {
+            if(_user && _user.emailAktif == true) {
                 req.flash('validation_error',[{msg: "Bu mail kullanılıyor"}])
                 req.flash('email', req.body.email);
                 req.flash('full_name', req.body.full_name);
@@ -74,19 +77,46 @@ const register = async(req, res, next) => {
                 req.flash('repassword', req.body.repassword);
 
                 res.redirect('/register');
-            } else {
+            } else if( (_user && _user.emailAktif == false) || _user == null) {
+
+                if (_user) {
+                    await User.findByIdAndRemove({
+                        where: {
+                            id: _user.id}
+                    })
+                }
                 const newUser = new User ({
                     email:req.body.email,
                     full_name:req.body.full_name,
                     user_name:req.body.user_name,
-                    password:req.body.password,
+                    //Şifre hashleme yapıldı
+                    password: await bcrypt.hash(req.body.password, 10),
                 });
                 //Yeni kullanıcının veri tabanına kayıt olması 
                 await newUser.save();
                 console.log("Kullanıcı Kaydedildi");
                 
+                
+                req.flash('success_message', [{msg: "Lutfen mail kutunuzu kontrol edin"}])
+
+                
+                //jwt işlemleri
+
+                const jwtBilgileri = {
+                    id: newUser.id,
+                    mail: newUser.email
+                };
+
+                const jwtToken = jwt.sign(jwtBilgileri, process.env.CONFIRM_MAIL_JWT_SECRET, {
+                    expiresIn:'1d'});
+                    console.log(jwtToken);
+
+
+                    //Mail GÖnderme İşlemleri
+
+
+
                 res.redirect('/login');
-                req.flash('success_message', [{msg: "Giriş yapabilirsiniz"}])
             }
 
         } catch(err) {

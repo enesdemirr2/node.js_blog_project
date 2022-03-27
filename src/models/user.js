@@ -11,6 +11,7 @@ User.init({
   full_name: DataTypes.STRING,
   password: DataTypes.STRING,
   email: DataTypes.STRING,
+  emailAktif: DataTypes.BOOLEAN
 }, {
   // Other model options 
   sequelize, // pass the connection instance
