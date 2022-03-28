@@ -350,23 +350,39 @@ const yeniSifreyiKaydet = async  (req, res, next) => {
         res.redirect('/reset-password/'+req.body.id+"/"+req.body.token);
 
     } else {
-        //Yeni şifreyi kaydet
-        const hashedPassword = await bcrypt.hash(req.body.password,10)
-        const sonuc = await User.update(
-            { password : hashedPassword },
-            { where : { id : req.body.id}}
-            
-            
-            
-        )
 
-            if (sonuc) {
-                req.flash("success_message", [{ msg: 'Basariyla sifre guncellendi'}]);
-                res.redirect('/login');
-            } else {
-                req.flash("error", 'Lutfen tekrar sifre sifirlama adımlarini uygulayin');
-                res.redirect('/login');
-            }
+        const _bulunanUser = await User.findOne({where : { id : req.body.id, emailAktif:true}})
+
+        const secret = process.env.RESET_PASSWORD_JWT_SECRET + "-" + _bulunanUser.password;
+
+        try {
+            jwt.verify(req.body.token, secret, async (e, decoded) => {
+
+                if (e) {
+                    req.flash('error', 'Kod Hatali Veya Süresi Dolmus');
+                    res.redirect('/forget-password');
+                } else {
+
+                     //Yeni şifreyi kaydet
+                    const hashedPassword = await bcrypt.hash(req.body.password,10)
+                    const sonuc = await User.update(
+                                { password : hashedPassword },
+                                { where : { id : req.body.id}}
+            
+                    )
+
+                    if (sonuc) {
+                    req.flash("success_message", [{ msg: 'Basariyla sifre guncellendi'}]);
+                    res.redirect('/login');
+                    } else {
+                    req.flash("error", 'Lutfen tekrar sifre sifirlama adımlarini uygulayin');
+                    res.redirect('/login');
+                    }
+                }
+            });  
+        } catch (err) {
+            console.log("Hata çıktı"+err);
+        } 
     }
 }
 
