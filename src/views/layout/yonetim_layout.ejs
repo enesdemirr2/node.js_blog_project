@@ -9,6 +9,11 @@
   <link rel="stylesheet" href="/admin/css/reset.css"> 
   <link rel="stylesheet" href="/admin/css/style.css"> 
   <link rel="stylesheet" href="/admin/css/sf.css"> 
+  
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap');
     
@@ -28,12 +33,15 @@
         <img src="/admin/media/logo.png" alt="logo.png"> 
       </a>
       <ul>
-        <li><a href="/">Ana Sayfa</a></li>
+        <li><a href="/yonetim">Ana Sayfa</a></li>
           
+        <% if(isAuth === true) { %> 
+          <li><a href="/yonetim/profile"><%- user.user_name %> </a></li>
           <li><a href="/logout">Çıkış Yap</a></li>
-        
+        <% } else if (isAuth === false){ %> 
           <li><a href="/login">Giriş Yap</a></li>
           <li><a href="/register">Kayıt Ol</a></li>
+        <% } %>
     
         <button><img src="/admin/media/search.png" alt="search.svg"></button>
       </ul> 

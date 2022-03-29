@@ -299,7 +299,7 @@ const yeniSifreFormuGoster = async (req, res, next) => {
 
                 if (e) {
                     req.flash('error', 'Kod Hatali Veya Süresi Dolmus');
-                    res.redirect('/forget-password');
+                    res.redirect('/forge t-password');
                 } else {
 
                     res.render('new_password', { id:linktekiID, token:linktekiToken, layout: './layout/auth_layout.ejs'})
