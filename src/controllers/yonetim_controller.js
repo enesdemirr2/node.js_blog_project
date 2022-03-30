@@ -13,7 +13,14 @@ const ProfilSayfasiniGoster = function (req, res, next) {
 
 }
 
+const profilGuncelle = function (req, res, next) {
+    
+    console.log(req.body);
+
+}
+
 module.exports = {
     anaSayfayiGoster,
-    ProfilSayfasiniGoster
+    ProfilSayfasiniGoster,
+    profilGuncelle
 }
