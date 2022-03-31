@@ -6,7 +6,7 @@ const multerConfig = require('../../config/multer_config');
 router.get('/', authMiddleware.oturumAcilmis, yonetimController.anaSayfayiGoster);
 router.get('/profile', authMiddleware.oturumAcilmis, yonetimController.ProfilSayfasiniGoster);
 
-router.post('/profile-guncelle', authMiddleware.oturumAcilmis, multerConfig.single('avatar'), yonetimController.profilGuncelle);
+router.post('/profile-guncelle', authMiddleware.oturumAcilmis, /*multerConfig.single('avatar'),*/ yonetimController.profilGuncelle);
 
 
 
