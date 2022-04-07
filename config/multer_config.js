@@ -13,15 +13,12 @@ const myStorage = multer.diskStorage({ //Multerın dosyaları aktardığı yer
 }); 
 
 const resimFileFilter = (req, file, cb) => {
-    if (file.mimetype == 'image/png' || file.mimetype == 'image/jpg') {
+    if (file.mimetype == 'image/png' || file.mimetype == 'image/jpeg') {
         cb(null, true);
     } else {
         cb(null, false)
     }
 }
 
-const uploadResim = multer({storage: myStorage, fileFilter:resimFileFilter});
+module.exports = multer({storage: myStorage, fileFilter:resimFileFilter});
 
-module.exports = {
-    uploadResim
-}
